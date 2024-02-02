@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 
-namespace EcoMine.Common.Extensions
+namespace JacatGames.Common.Extensions
 {
     public static class ListExtensions
     {
