@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
+using UnityEngine.EventSystems;
 
 namespace JacatGames.Common.Extensions
 {
@@ -48,6 +49,16 @@ namespace JacatGames.Common.Extensions
                 Index = randomIndex,
                 Value = list[randomIndex]
             };
+        }
+
+        public static bool Contains<T>(this List<T> list, List<T> collection)
+        {
+            foreach (var obj in list)
+            {
+                if (collection.Contains(obj))
+                    return true;
+            }
+            return false;
         }
     }
 
