@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace EcoMine.Common.Extensions
+namespace JacatGames.Common.Extensions
 {
     public static class GameObjectExtensions
     {

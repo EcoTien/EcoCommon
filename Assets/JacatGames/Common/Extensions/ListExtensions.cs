@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 
-namespace EcoMine.Common.Extensions
+namespace JacatGames.Common.Extensions
 {
     public static class ListExtensions
     {
@@ -21,14 +22,14 @@ namespace EcoMine.Common.Extensions
         {
             randomOption ??= new RandomOption<T>();
 
-            if (list.Count < randomOption.RandomCount)
+            if (list.Count < randomOption.randomCount)
                 throw new ArgumentException("Count random must be greater than list!");
 
             List<T> listCopy = new(list);
-            listCopy.RemoveAll(randomOption.Ignores.Contains);
+            listCopy.RemoveAll(randomOption.ignores.Contains);
 
             List<RandomResult<T>> listRandom = new();
-            for (int i = 0; i < randomOption.RandomCount; i++)
+            for (int i = 0; i < randomOption.randomCount; i++)
             {
                 int randomCurrentIndex = ThreadSafeRandom.ThisThreadsRandom.Next(0, listCopy.Count);
                 T valueRandom = listCopy[randomCurrentIndex];
@@ -58,8 +59,28 @@ namespace EcoMine.Common.Extensions
 
     public class RandomOption<T>
     {
-        public int RandomCount = 1;
-        public List<T> Ignores = new();
+        public int randomCount;
+        public List<T> ignores;
+
+        public RandomOption()
+        {
+            this.randomCount = 1;
+            this.ignores = new();
+        }
+
+        public RandomOption(int randomCount = 1, List<T> ignores = null)
+        {
+            this.randomCount = randomCount;
+            if (ignores == null)
+                this.ignores = new();
+            else
+                this.ignores = ignores;
+        }
+
+        public RandomOption(T ignore)
+        {
+            this.ignores = new() { ignore };
+        }
     }
     
     public static class ThreadSafeRandom
