@@ -60,6 +60,16 @@ namespace JacatGames.Common.Extensions
             }
             return false;
         }
+
+        public static T FindSame<T>(this List<T> list, List<T> collection, T ignore = default)
+        {
+            foreach (T obj in list)
+            {
+                if (collection.Contains(obj) && !obj.Equals(ignore))
+                    return obj;
+            }
+            return default;
+        }
     }
 
     public struct RandomResult<T>
