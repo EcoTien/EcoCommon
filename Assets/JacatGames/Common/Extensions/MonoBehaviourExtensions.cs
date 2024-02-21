@@ -8,30 +8,16 @@ namespace JacatGames.Common.Extensions
     {
         public static void DelayCall(this MonoBehaviour mono, float duration, Action callBack, bool ignoreTimeScale = true)
         {
+            mono.StartCoroutine(IEDelayCall(duration, callBack, ignoreTimeScale));
+        }
+
+        static IEnumerator IEDelayCall(float duration, Action callBack, bool ignoreTimeScale)
+        {
             if (ignoreTimeScale)
-                mono.StartCoroutine(IEDelayCallIgnoreTimeScale(duration, callBack));
+                yield return new WaitForSecondsRealtime(duration);
             else
-                mono.StartCoroutine(IEDelayCall(duration, callBack));
-        }
-
-        static IEnumerator IEDelayCallIgnoreTimeScale(float duration, Action callBack)
-        {
-            float elapsedTime = 0f;
-
-            while (elapsedTime < duration)
-            {
-                elapsedTime += Time.unscaledDeltaTime;
-                yield return null;
-            }
-
-            callBack?.Invoke();
-        }
-
-        static IEnumerator IEDelayCall(float duration, Action callBack)
-        {
-            float startTime = Time.realtimeSinceStartup;
-            while (Time.realtimeSinceStartup - startTime < duration)
-                yield return null;
+                yield return new WaitForSeconds(duration);
+            
             callBack?.Invoke();
         }
     }
