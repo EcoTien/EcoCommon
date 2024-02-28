@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
+using UnityEngine;
 using UnityEngine.EventSystems;
+using Random = System.Random;
 
 namespace JacatGames.Common.Extensions
 {
@@ -69,6 +71,18 @@ namespace JacatGames.Common.Extensions
                     return obj;
             }
             return default;
+        }
+        
+        public static T FindSameWithPriorities<T>(this List<T> list, List<T> collection, T priorities)
+        {
+            T objSelect = default;
+            
+            foreach (T obj in list)
+            {
+                if (collection.Contains(obj) || obj.Equals(priorities))
+                    objSelect = obj;
+            }
+            return objSelect;
         }
         
         public static T FindSame<T>(this List<T> list, List<T> collection, List<T> ignore)
