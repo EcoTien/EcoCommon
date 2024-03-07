@@ -79,7 +79,9 @@ namespace JacatGames.Common.Extensions
             
             foreach (T obj in list)
             {
-                if (collection.Contains(obj) || obj.Equals(priorities))
+                if (obj.Equals(priorities) && collection.Contains(obj))
+                    return obj;
+                if (collection.Contains(obj))
                     objSelect = obj;
             }
             return objSelect;
