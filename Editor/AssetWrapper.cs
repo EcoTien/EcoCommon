@@ -5,24 +5,21 @@ using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace EcoMine.Editor.Utils
+namespace EcoMine.Editor
 {
-    public class AssetUtils
+    internal static class AssetWrapper
     {
-        public static List<T> LoadAllAssetAtPath<T>(string path, string searchPattern = "") where T : Object
+        public static T[] LoadAllAssetAtPath<T>(string path) where T : Object
         {
-            string[] files;
-            if(!string.IsNullOrEmpty(searchPattern))
-                files = Directory.GetFiles(path, searchPattern, SearchOption.TopDirectoryOnly);
-            else
-                files = Directory.GetFiles(path);
-            
-            List<T> objects = new List<T>();
-            foreach (var file in files)
-                if(!file.EndsWith(".meta"))
-                    objects.Add(AssetDatabase.LoadAssetAtPath<T>(file));
-            
-            return objects;
+            string[] allAssetGUIDs = AssetDatabase.FindAssets("", new string[]{ path });
+            List<T> items = new List<T>();
+            foreach (string guid in allAssetGUIDs)
+            {
+                string assetPath = AssetDatabase.GUIDToAssetPath(guid);
+                Object asset = AssetDatabase.LoadAssetAtPath<Object>(assetPath);
+                if(asset is T t) items.Add(t);
+            }
+            return items.ToArray();
         }
         
         public static T CreateScriptTableObject<T>(string name, string path, bool saveAndRefresh = true) where T : ScriptableObject
