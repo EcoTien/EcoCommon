@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using Random = System.Random;
 
-namespace JacatGames.Common.Extensions
+namespace EcoMine.Common.Extensions
 {
     public static class ListExtensions
     {

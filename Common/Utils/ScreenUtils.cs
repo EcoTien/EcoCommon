@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace JacatGames.Common.Utils
+namespace EcoMine.Common.Utils
 {
     public class ScreenUtils
     {
