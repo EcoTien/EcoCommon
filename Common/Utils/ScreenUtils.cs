@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace EcoMine.Common.Utils
 {
@@ -32,5 +33,15 @@ namespace EcoMine.Common.Utils
             float rectHeight = (rectTransform.anchorMax.y - rectTransform.anchorMin.y) * Screen.height;
             return new Vector2(rectWidth, rectHeight);
         }
+        
+        public static bool IsPointerOverUI()
+        {
+            PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
+            pointerEventData.position = Input.mousePosition;
+            var raycastResults = new System.Collections.Generic.List<RaycastResult>();
+            EventSystem.current.RaycastAll(pointerEventData, raycastResults);
+            return raycastResults.Count > 0;
+        }
+        
     }
 }
