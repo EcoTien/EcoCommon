@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace EcoMine.Common.Extensions
 {
-    public static class GameObjectExtensions
+    internal static class GameObjectExtensions
     {
         /// <summary>
         /// Check game object is prefab

@@ -2,7 +2,7 @@
 
 namespace EcoMine.Common.Extensions
 {
-    public static class TextExtensions
+    internal static class TextExtensions
     {
         public static string FormatNumber(this int number)
         {

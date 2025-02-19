@@ -8,7 +8,7 @@ using Random = System.Random;
 
 namespace EcoMine.Common.Extensions
 {
-    public static class ListExtensions
+    internal static class ListExtensions
     {
         public static void Shuffle<T>(this IList<T> list)
         {
