@@ -2,7 +2,7 @@
 
 namespace EcoMine.Common.Extensions
 {
-    internal static class ColorExtension
+    internal static class ColorExtensions
     {
         public static void SetAlphaSelf(this ref Color color, float alpha)
         {

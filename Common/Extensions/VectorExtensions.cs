@@ -2,7 +2,7 @@
 
 namespace EcoMine.Common.Extensions
 {
-    public static class VectorExtension
+    public static class VectorExtensions
     {
         public static Vector3 ToEuler360(this Vector3 vector3)
         {
