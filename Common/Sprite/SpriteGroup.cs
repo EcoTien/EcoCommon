@@ -1,4 +1,6 @@
-﻿namespace EcoMine.Common
+﻿using System.Linq;
+
+namespace EcoMine.Common
 {
     using System.Collections.Generic;
     using UnityEngine;
@@ -51,7 +53,7 @@
         private bool _dirtyAlpha = true;
         private bool _dirtyVisible = true;
 
-        private static readonly List<SpriteRenderer> _temp = new List<SpriteRenderer>(128);
+        private static List<SpriteRenderer> _temp = new List<SpriteRenderer>(128);
 
         void OnEnable()
         {
@@ -81,7 +83,7 @@
             _items.Clear();
             _temp.Clear();
 
-            GetComponentsInChildren(_temp);
+            _temp = GetComponentsInChildren<SpriteRenderer>(true).ToList();
 
             for (int i = 0, n = _temp.Count; i < n; i++)
             {
