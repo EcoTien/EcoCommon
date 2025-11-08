@@ -9,7 +9,6 @@ namespace EcoMine.Common
     public sealed class SpriteGroup : MonoBehaviour
     {
         [Range(0f, 1f)] [SerializeField] private float _alpha = 1f; 
-        [SerializeField] private bool _visible = true; // ẩn/hiện cả nhóm
 
         public float alpha
         {
@@ -21,20 +20,6 @@ namespace EcoMine.Common
                 {
                     _alpha = value;
                     _dirtyAlpha = true;
-                    _anyDirty = true;
-                }
-            }
-        }
-
-        public bool visible
-        {
-            get => _visible;
-            set
-            {
-                if (_visible != value)
-                {
-                    _visible = value;
-                    _dirtyVisible = true;
                     _anyDirty = true;
                 }
             }
@@ -107,19 +92,11 @@ namespace EcoMine.Common
         {
             if (!_anyDirty) return;
 
-            bool targetEnabled = _visible && (_alpha > 0f);
-
             for (int i = 0, n = _items.Count; i < n; i++)
             {
                 var it = _items[i];
                 var r = it.r;
                 if (r == null) continue;
-
-                if (it.lastEnabled != targetEnabled)
-                {
-                    r.enabled = targetEnabled;
-                    it.lastEnabled = targetEnabled;
-                }
 
                 if (_dirtyAlpha)
                 {
@@ -149,33 +126,6 @@ namespace EcoMine.Common
                 _dirtyAlpha = _anyDirty = true;
             }
 
-            Apply();
-        }
-
-        public void SetVisibleImmediate(bool value)
-        {
-            if (_visible != value)
-            {
-                _visible = value;
-                _dirtyVisible = _anyDirty = true;
-            }
-
-            Apply();
-        }
-
-        public void RebaselineBaseAlpha()
-        {
-            for (int i = 0, n = _items.Count; i < n; i++)
-            {
-                var it = _items[i];
-                if (it.r == null) continue;
-                var c = it.r.color;
-                it.baseA = c.a; 
-                it.lastColor = c;
-                _items[i] = it;
-            }
-
-            _dirtyAlpha = _anyDirty = true;
             Apply();
         }
     }
