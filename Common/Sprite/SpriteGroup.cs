@@ -1,132 +1,55 @@
-﻿using System.Linq;
+﻿using System;
+using EcoMine.Common.Extensions;
+using Sirenix.OdinInspector;
+using UnityEngine;
 
 namespace EcoMine.Common
 {
-    using System.Collections.Generic;
-    using UnityEngine;
-
     [DisallowMultipleComponent]
+    [ExecuteInEditMode]
     public sealed class SpriteGroup : MonoBehaviour
     {
-        [Range(0f, 1f)] [SerializeField] private float _alpha = 1f; 
+        [SerializeField, Range(0, 1f), OnValueChanged("AlphaChange")/*, ShowIf("IsPlayingMode")*/] private float _alphaDebugger = 1f;
+        
+        /*[HideInInspector] public SpriteData[] spritesData;*/
+        [HideInInspector] public SpriteRenderer[] spriteRenderers;
 
-        public float alpha
+        public void SetAlpha(float alpha)
         {
-            get => _alpha;
-            set
+            _alphaDebugger = alpha;
+            foreach (var spriteRenderer in spriteRenderers)
+                spriteRenderer.color = spriteRenderer.color.SetAlpha(alpha);
+        }
+
+        private void AlphaChange()
+        {
+            SetAlpha(_alphaDebugger);
+        }
+        
+#if UNITY_EDITOR
+        private void LateUpdate()
+        {
+            spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+        }
+#endif 
+        
+        /*private bool IsPlayingMode => Application.isPlaying;
+#if UNITY_EDITOR
+        private void LateUpdate()
+        {
+            if(IsPlayingMode) return;
+            
+            SpriteRenderer[] spriteRenderers = GetComponentsInChildren<SpriteRenderer>(true);
+            spritesData = new SpriteData[spriteRenderers.Length];
+            for (var i = 0; i < spriteRenderers.Length; i++)
             {
-                value = Mathf.Clamp01(value);
-                if (!Mathf.Approximately(_alpha, value))
-                {
-                    _alpha = value;
-                    _dirtyAlpha = true;
-                    _anyDirty = true;
-                }
+                SpriteRenderer spriteRenderer = spriteRenderers[i];
+                SpriteData spriteData = new SpriteData();
+                spriteData.renderer = spriteRenderer;
+                spriteData.alpha = spriteRenderer.color.GetAlpha();
+                spritesData[i] = spriteData;
             }
         }
-
-        struct Cached
-        {
-            public SpriteRenderer r;
-            public float baseA;
-            public bool lastEnabled;
-            public Color lastColor;
-        }
-
-        private readonly List<Cached> _items = new List<Cached>(64);
-        private bool _anyDirty = true;
-        private bool _dirtyAlpha = true;
-        private bool _dirtyVisible = true;
-
-        private static List<SpriteRenderer> _temp = new List<SpriteRenderer>(128);
-
-        void OnEnable()
-        {
-            Refresh();
-            Apply();
-        }
-
-        void OnValidate()
-        {
-            _alpha = Mathf.Clamp01(_alpha);
-            _anyDirty = _dirtyAlpha = _dirtyVisible = true;
-        }
-
-        void LateUpdate()
-        {
-            if (_anyDirty) Apply();
-        }
-
-        void OnTransformChildrenChanged()
-        {
-            Refresh();
-            _anyDirty = true;
-        }
-
-        public void Refresh()
-        {
-            _items.Clear();
-            _temp.Clear();
-
-            _temp = GetComponentsInChildren<SpriteRenderer>(true).ToList();
-
-            for (int i = 0, n = _temp.Count; i < n; i++)
-            {
-                var r = _temp[i];
-                if (r == null) continue;
-
-                var c = r.color;
-                _items.Add(new Cached
-                {
-                    r = r,
-                    baseA = c.a,
-                    lastEnabled = r.enabled,
-                    lastColor = c
-                });
-            }
-
-            _anyDirty = _dirtyAlpha = _dirtyVisible = true;
-        }
-
-        public void Apply()
-        {
-            if (!_anyDirty) return;
-
-            for (int i = 0, n = _items.Count; i < n; i++)
-            {
-                var it = _items[i];
-                var r = it.r;
-                if (r == null) continue;
-
-                if (_dirtyAlpha)
-                {
-                    float newA = it.baseA * _alpha;
-                    if (!Mathf.Approximately(it.lastColor.a, newA))
-                    {
-                        var col = it.lastColor;
-                        col.a = newA;
-                        r.color = col;
-                        it.lastColor = col;
-                    }
-                }
-
-                _items[i] = it;
-            }
-
-            _dirtyAlpha = _dirtyVisible = false;
-            _anyDirty = false;
-        }
-
-        public void SetAlphaImmediate(float value)
-        {
-            value = Mathf.Clamp01(value);
-            if (!Mathf.Approximately(_alpha, value))
-            {
-                _alpha = value;
-                _dirtyAlpha = _anyDirty = true;
-            }
-
-            Apply();
-        }
+#endif*/
     }
 }
