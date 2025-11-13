@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Sirenix.OdinInspector;
 using UnityEngine;
 
@@ -10,9 +11,9 @@ public class SpriteGroup : MonoBehaviour
     private static readonly int MAINTEX_ID = Shader.PropertyToID("_MainTex");
 
     [Range(0, 1f)]
-    [SerializeField] private float _alpha = 1f;
+    [SerializeField, OnValueChanged("ApplyAlphaToAll")] private float _alpha = 1f;
 
-    private readonly Dictionary<SpriteRenderer, MaterialPropertyBlock> _renderers = new();
+    [ShowInInspector] private readonly Dictionary<SpriteRenderer, MaterialPropertyBlock> _renderers = new();
 
     private void OnEnable()
     {
